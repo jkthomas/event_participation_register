@@ -4,7 +4,7 @@ import flash from 'express-flash';
 import bodyParser from 'body-parser';
 import lusca from 'lusca';
 import morgan from 'morgan';
-import { RegisterActions } from './Register/UI/RegisterActions';
+import { RegisterRoutes } from './Register/Routes/RegisterRoutes';
 
 const App = express();
 
@@ -18,6 +18,6 @@ App.use(bodyParser.urlencoded({ extended: true }));
 App.use(lusca.xframe('SAMEORIGIN'));
 App.use(lusca.xssProtection(true));
 App.use(morgan('combined'));
-RegisterActions.registerRoutes(App);
 App.listen(App.get('port'));
+App.use(RegisterRoutes.createRegisterRoutes());
 console.log("App listening on port: " + (process.env.PORT || 3000))
