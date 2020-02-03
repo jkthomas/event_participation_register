@@ -10,7 +10,14 @@ interface IParticipant extends Document {
 const ParticipantSchema = new Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
-  email: { type: String, required: true },
+  email: {
+    type: String,
+    required: true,
+    match: [
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+      "Invalid email pattern."
+    ]
+  },
   eventDate: { type: Date, required: true }
 });
 
