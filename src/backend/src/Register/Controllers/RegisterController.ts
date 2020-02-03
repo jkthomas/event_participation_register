@@ -1,6 +1,4 @@
-import { Express, Request, Response } from "express";
-import { Db, MongoClient } from "mongodb";
-import Participant from "../Models/Participant";
+import { Request, Response } from "express";
 import { RegisterService } from "../Services/RegisterService";
 
 export namespace RegisterController {

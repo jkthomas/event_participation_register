@@ -1,25 +1,29 @@
-import { Express, Request, Response } from "express";
-import { Db, MongoClient } from "mongodb";
 import Participant from "../Models/Participant";
+import { RegisterValidator } from "../../Lib/Validation/RegisterValidator";
+import { Result } from "../../Lib/App/Result";
 
 export namespace RegisterService {
   export async function registerParticipant(
     participant: Object
-  ): Promise<{ code: Number; test: string }> {
-    //TODO: Add result handling
-    let result = { code: 6, test: "test" };
+  ): Promise<Result> {
+    let result = new Result();
 
     try {
       let participantModel = new Participant(participant);
       await participantModel.save((err, participant) => {
         if (err) {
-          result.test = err.errors.email.message;
+          result.isError = true;
+          result.errors = RegisterValidator.addErrors(err);
         } else {
-          result.test = participant.toJSON();
+          console.log(participant);
+          //TODO: Data is not returned
+          result.data = participant.toString();
         }
       });
     } catch (e) {
-      result.test = e.message;
+      result.isError = true;
+      //TODO: Fix
+      // result.errors = RegisterValidator.addErrors(err);
     }
 
     return result;
