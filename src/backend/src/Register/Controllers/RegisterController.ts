@@ -10,8 +10,10 @@ export namespace RegisterController {
     req: Request,
     res: Response
   ): Promise<void> {
-    const participant = await RegisterService.registerParticipant(req.body);
-    //TODO: Add error handling
-    res.send(participant);
+    const result = await RegisterService.registerParticipant(req.body);
+    if (result.isError) {
+      res.status(400).send({ errors: result.errors });
+    }
+    res.status(201).send(result.data);
   }
 }
