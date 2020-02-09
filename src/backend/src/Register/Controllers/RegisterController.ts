@@ -13,7 +13,8 @@ export namespace RegisterController {
     const result = await RegisterService.registerParticipant(req.body);
     if (result.isError) {
       res.status(400).send({ errors: result.errors });
+    } else {
+      res.status(201).send(result.data);
     }
-    res.status(201).send(result.data);
   }
 }
