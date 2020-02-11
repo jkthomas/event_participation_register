@@ -8,11 +8,20 @@ interface IParticipant extends Document {
 }
 
 const ParticipantSchema = new Schema({
-  firstName: { type: String, required: [true, "First name is required"] },
-  lastName: { type: String, required: [true, "Last name is required"] },
+  firstName: {
+    type: String,
+    required: [true, "First name is required"],
+    maxlength: [32, "First name can't have more than 32 characters"]
+  },
+  lastName: {
+    type: String,
+    required: [true, "Last name is required"],
+    maxlength: [32, "Last name can't have more than 32 characters"]
+  },
   email: {
     type: String,
     required: [true, "Email is required"],
+    maxlength: [32, "Email can't have more than 32 characters"],
     match: [
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
       "Invalid email pattern."

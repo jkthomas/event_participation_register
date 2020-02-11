@@ -15,7 +15,6 @@ export namespace RegisterService {
       })
       .catch(e => {
         result.isError = true;
-        result.errors.push(e.message);
         result.errors = RegisterValidator.addErrors(e);
       });
 
