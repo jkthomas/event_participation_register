@@ -1,17 +1,20 @@
 .PHONY: %
 .DEFAULT_GOAL := up
 
-dev:
-	@cd src/backend/src; yarn dev
-
-production:
-	@cd src/backend/src; yarn prod
-
 mongo_up:
 	sudo service mongod start
 
 mongo_down:
 	sudo service mongod stop
 
+dev:
+	@cd src/backend; yarn dev
+
+production:
+	@cd src/backend; yarn prod
+
 test:
-	@cd src/backend/src; yarn test
+	@cd src/backend; yarn test
+
+client:
+	@cd src/frontend; yarn start
