@@ -16,6 +16,9 @@ import DatePicker from "react-datepicker";
 
 const App = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [formAlertType, setFormAlertType] = useState("info");
+  const [isInfoAlertVisible, setIsInfoAlertVisible] = useState(false);
+  const [serverError, setServerError] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -25,32 +28,54 @@ const App = () => {
     if (event) {
       event.preventDefault();
       setIsSubmitted(true);
-      fetch("http://localhost:3000/event/register", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-          eventDate:
-            eventDate.getUTCFullYear.toString() +
-            "-" +
-            eventDate.getUTCMonth.toString() +
-            "-" +
-            eventDate.getUTCDay.toString() +
-            "T12:00:00.000Z"
+      //TODO: Errors are empty before fields checking - need to change
+      if (Object.keys(errors).length === 0) {
+        fetch("http://localhost:4000/event/register", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            eventDate:
+              eventDate.getUTCFullYear().toString() +
+              "-" +
+              ("0" + (eventDate.getUTCMonth() + 1).toString()).slice(-2) +
+              "-" +
+              eventDate.getUTCDate().toString() +
+              "T12:00:00.000Z"
+          })
         })
-      })
-        .then(response => response.json())
-        .then(responseJson => {
-          console.log(responseJson);
-        })
-        .catch(error => {
-          console.error(error);
-        });
+          .then(response => {
+            if (response.status === 201) {
+              setFormAlertType("info");
+              setIsInfoAlertVisible(true);
+            } else if (response.status === 400) {
+              response.json().then(json => {
+                console.log(json.errors);
+                setFormAlertType("danger");
+                setIsInfoAlertVisible(true);
+                let errorMessage = "Bad request - 400: ";
+                json.errors.forEach((error: string) => {
+                  errorMessage += error + ". ";
+                });
+
+                setServerError(errorMessage);
+              });
+            } else {
+              throw Error("Internal server error - 500");
+            }
+          })
+          .catch(error => {
+            console.log(error);
+            setFormAlertType("danger");
+            setIsInfoAlertVisible(true);
+            setServerError(error.message);
+          });
+      }
     }
   };
 
@@ -58,24 +83,26 @@ const App = () => {
     const errors: any = {};
     if (isSubmitted) {
       if (!values.firstName) {
-        errors.firstName = "First name is required";
+        errors.firstName = "First name is required.";
       }
       if (!values.lastName) {
-        errors.lastName = "Last name is required";
+        errors.lastName = "Last name is required.";
       }
       if (!values.email) {
-        errors.email = "Email is required";
+        errors.email = "Email is required.";
       } else if (
         // eslint-disable-next-line
         !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/i.test(values.email)
       ) {
-        errors.email = "Invalid email address";
+        errors.email = "Invalid email address.";
       }
     }
     return errors;
   };
 
   const errors = validate({ firstName, lastName, email });
+
+  const onInfoAlertDismiss = () => setIsInfoAlertVisible(false);
 
   return (
     <Container>
@@ -135,6 +162,13 @@ const App = () => {
         </FormGroup>
         <Button>Submit</Button>
       </Form>
+      <Alert
+        color={formAlertType}
+        isOpen={isInfoAlertVisible}
+        toggle={onInfoAlertDismiss}
+      >
+        {serverError || "You have been registered to an event. See you soon!"}
+      </Alert>
     </Container>
   );
 };

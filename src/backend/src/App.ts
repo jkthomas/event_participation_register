@@ -17,6 +17,14 @@ App.use(bodyParser.json());
 App.use(bodyParser.urlencoded({ extended: true }));
 App.use(lusca.xframe("SAMEORIGIN"));
 App.use(lusca.xssProtection(true));
+App.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 App.use(morgan("combined"));
 const server = App.listen(App.get("port"), () => {
   console.log("App listening on port: " + (process.env.PORT || 4000));
