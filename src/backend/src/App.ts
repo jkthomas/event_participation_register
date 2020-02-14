@@ -9,7 +9,7 @@ import { connect } from "mongoose";
 
 const App = express();
 
-App.set("port", process.env.PORT || 3000);
+App.set("port", process.env.PORT || 4000);
 App.use(passport.initialize());
 App.use(passport.session());
 App.use(flash());
@@ -19,7 +19,7 @@ App.use(lusca.xframe("SAMEORIGIN"));
 App.use(lusca.xssProtection(true));
 App.use(morgan("combined"));
 const server = App.listen(App.get("port"), () => {
-  console.log("App listening on port: " + (process.env.PORT || 3000));
+  console.log("App listening on port: " + (process.env.PORT || 4000));
 });
 connect("mongodb://localhost:27017/events", {
   useNewUrlParser: true,

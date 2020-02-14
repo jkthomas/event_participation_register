@@ -24,7 +24,7 @@ const ParticipantSchema = new Schema({
     maxlength: [32, "Email can't have more than 32 characters"],
     match: [
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-      "Invalid email pattern."
+      "Invalid email address pattern"
     ]
   },
   eventDate: { type: Date, required: [true, "Event date is required"] }
