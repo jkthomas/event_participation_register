@@ -28,7 +28,6 @@ const App = () => {
     if (event) {
       event.preventDefault();
       setIsSubmitted(true);
-      //TODO: Errors are empty before fields checking - need to change
       if (Object.keys(errors).length === 0) {
         fetch("http://localhost:4000/event/register", {
           method: "POST",
@@ -55,7 +54,6 @@ const App = () => {
               setIsInfoAlertVisible(true);
             } else if (response.status === 400) {
               response.json().then(json => {
-                console.log(json.errors);
                 setFormAlertType("danger");
                 setIsInfoAlertVisible(true);
                 let errorMessage = "Bad request - 400: ";
@@ -70,7 +68,6 @@ const App = () => {
             }
           })
           .catch(error => {
-            console.log(error);
             setFormAlertType("danger");
             setIsInfoAlertVisible(true);
             setServerError(error.message);
@@ -100,7 +97,7 @@ const App = () => {
     return errors;
   };
 
-  const errors = validate({ firstName, lastName, email });
+  const errors = validate({ firstName, lastName, email, eventDate });
 
   const onInfoAlertDismiss = () => setIsInfoAlertVisible(false);
 
