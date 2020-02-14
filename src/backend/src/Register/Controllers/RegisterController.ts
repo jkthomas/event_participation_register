@@ -2,10 +2,6 @@ import { Request, Response } from "express";
 import { RegisterService } from "../Services/RegisterService";
 
 export namespace RegisterController {
-  export async function getParticipants(req: Request, res: Response) {
-    res.send({ placeholder: "placeholder" });
-  }
-
   export async function registerParticipant(
     req: Request,
     res: Response
